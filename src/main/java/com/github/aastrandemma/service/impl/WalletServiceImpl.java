@@ -5,12 +5,16 @@ import com.github.aastrandemma.exception.WalletNotFoundException;
 import com.github.aastrandemma.exception.WalletValidationException;
 import com.github.aastrandemma.model.Wallet;
 import com.github.aastrandemma.service.WalletService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Component
 public class WalletServiceImpl implements WalletService {
     private WalletDao walletDao;
 
+    @Autowired
     public WalletServiceImpl(WalletDao walletDao) {
          this.walletDao = walletDao;
     }
@@ -19,7 +23,8 @@ public class WalletServiceImpl implements WalletService {
     public Wallet create(String walletName) {
         if (walletName == null) throw new WalletValidationException("Parameter is not valid.", "walletName");
 
-        // ToDo: add more logics like: if the wallet name exists or not
+        Optional<Wallet> optionalWallet = walletDao.findWalletByName(walletName);
+        if (optionalWallet.isPresent()) throw new WalletValidationException("Wallet already exist.", "walletName");
 
         Wallet wallet = new Wallet(walletName);
         return walletDao.createWallet(wallet);

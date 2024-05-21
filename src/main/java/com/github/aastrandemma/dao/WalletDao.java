@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface WalletDao {
     Wallet createWallet(Wallet wallet);
     Optional<Wallet> findWalletById(String id);
+    Optional<Wallet> findWalletByName(String name);
 }
